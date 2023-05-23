@@ -30,12 +30,29 @@ class Tree:
         # code will not be always updated
         self.code = []
 
+    def encode_data_ba(self) -> bitarray:
+        """Returns 9 bits representing data~byte stored in the leaf"""
+        if not self.data:
+            raise ValueError()
+        if self.data == NYT:
+            return bitarray([1]*9)
+        return bitarray([0]+list(map(int, self.data)))
+
+    def decode_data_ba(self, ar: bitarray):# TODO test decode(encode(content))==content
+        if ar == bitarray([1]*9):
+            self.data = NYT
+            return
+        self.data = list(map(bool, ar[1:]))
+
     def dump(self) -> bitarray:
-        res = []#bitarray()
+        print(self.data)
+        res = []  # bitarray()
+        # if self.data == NYT:
+        #     raise ValueError(f"NYT {self.left, self.right}")
         if self.is_leaf:
             res.append(0)
-            res.extend(self.data)  # TODO check if bug
-            # res.extend(map(int, self.data))  # TODO check if bug
+            # res.extend(self.data)  # TODO check if bug
+            res.extend(self.encode_data_ba())  # TODO check if bug
             return res
         res.append(1)
         res.extend(self.left.dump())
