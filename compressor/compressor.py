@@ -1,4 +1,5 @@
 # rle_compressed, cntrs = rle.encode(mtf.encode(BWT.encode(part_text+SHARP)))
+import argparse
 from typing import Tuple
 import numba
 import numpy as np
@@ -409,3 +410,32 @@ class Archiver:
         mtf_encoded = rle.decode(rle_compressed, cntrs)
         # assert mtf_encoded == global_mtf_encoded
         return BWT.decode(mtf.decode(mtf_encoded))[:-1]
+
+
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser()
+    parser.add_argument("infile", help="Input file")
+    parser.add_argument("outfile", help="Otput file")
+    parser.add_argument("--encode", help="encode", action="store_true")
+    parser.add_argument("--decode", help="decode", action="store_true")
+    args = parser.parse_args()
+    # print(args.file, args.encode)
+    if not args.decode and not args.encode:
+        print("You should specify one of the parameters: encode or decode")
+        exit()
+    if args.decode and args.encode:
+        print("You should specify only one of the parameters: encode or decode")
+        exit()
+    if args.encode:
+        with open(args.infile, 'r') as file:
+            text = file.read()
+            bits = Archiver.encode(text)
+            with open(args.outfile, 'wb') as fh:
+                bits.tofile(fh)
+    if args.decode:
+        bits = bitarray()
+        with open(args.infile, 'rb') as fh:
+            bits.fromfile(fh)
+            decompressed = Archiver.decode(bits)
+            with open(args.outfile, 'w') as outf:
+                outf.write(decompressed)
