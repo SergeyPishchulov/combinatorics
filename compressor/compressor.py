@@ -230,12 +230,11 @@ def _shift(alphabet, up, lo):
         alphabet[i+1] = alphabet[i]
     return alphabet
 
-
+ALPHABET_SIZE = 256
 class mtf:
     def get_alphabet():
+        # return list('#Ban')
         return [chr(i) for i in range(ALPHABET_SIZE)]
-        # return [chr(i) for i in range(10_000)]
-        # return [chr(i) for i in range(ord('z')+1)]
 
     def update_alphabet(alphabet, ind, c):
         if ind > 1:
@@ -301,32 +300,13 @@ class rle:
         return res
 
 
-BYTE_ORDER = 'big'
-
-
-class ListByte:
-    def encode(l):
-        return b''.join([(int(x)).to_bytes(2, byteorder=BYTE_ORDER) for x in l])
-
-    def decode(bs):
-        return [int.from_bytes(bs[2*i:2*(i+1)], byteorder=BYTE_ORDER)
-                for i in range(len(bs)//2)]
-
-
-ALPHABET_SIZE = 10_000
-ALPHABET_RANGE = (0, ALPHABET_SIZE)
-
-
 class Huffman:
     def encode(l: list):
-        ada_huff = AdaptiveHuffman(ListByte.encode(l), alphabet_range=ALPHABET_RANGE
-                                   )
-        # ada_huff = AdaptiveHuffman(bytes(l))
+        ada_huff = AdaptiveHuffman(bytes(l))
         return ada_huff.encode()
 
     def decode(code: bitarray):
-        add_huff_decoder = AdaptiveHuffman(code, alphabet_range=ALPHABET_RANGE)
-        return ListByte.decode(add_huff_decoder.decode())
+        add_huff_decoder = AdaptiveHuffman(code)
         return add_huff_decoder.decode()
 
 
