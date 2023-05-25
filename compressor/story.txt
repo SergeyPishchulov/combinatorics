@@ -1,0 +1,1 @@
+To show that the option is actually optional, there is no error when running the program without it. Note that by default, if an optional argument isn't used, the relevant variable, in this case args.verbosity, is give

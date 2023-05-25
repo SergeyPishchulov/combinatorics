@@ -5,13 +5,9 @@ import numba
 import numpy as np
 import string
 import math
-import plotly.express as px
-import pandas as pd
 from bitarray import bitarray, bits2bytes
-from itertools import permutations
 from adaptive import AdaptiveHuffman
 import random
-from functools import partial
 
 
 HEADER_SIZE = 128
